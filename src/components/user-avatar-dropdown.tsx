@@ -51,7 +51,10 @@ export function UserAvatarDropdown({ user }: UserAvatarDropdownProps) {
             className="group relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             aria-label="User account menu"
           >
-            <Avatar size="default" className="transition-transform group-hover:scale-105">
+            <Avatar
+              size="default"
+              className="transition-transform group-hover:scale-105"
+            >
               {avatarUrl && <AvatarImage src={avatarUrl} alt={name || email} />}
               <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
                 {initials}

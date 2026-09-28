@@ -1,8 +1,8 @@
-import "./src/env/client"
-import "./src/env/server"
+import "./src/env/client";
+import "./src/env/server";
 
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {}
+const nextConfig: NextConfig = {};
 
-export default nextConfig
+export default nextConfig;
