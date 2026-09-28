@@ -65,13 +65,8 @@ export async function ensureSponsors() {
         aliases: [...sponsor.aliases],
         obligation: sponsor.obligation,
       })
-      .onConflictDoUpdate({
+      .onConflictDoNothing({
         target: sponsors.name,
-        set: {
-          tier: sponsor.tier,
-          aliases: [...sponsor.aliases],
-          obligation: sponsor.obligation,
-        },
       });
   }
 }
@@ -179,6 +174,28 @@ export async function insertIncident(values: {
 
   if (!row) {
     throw new Error("The incident was not saved.");
+  }
+
+  return row.id;
+}
+export async function insertSponsor(values: {
+  name: string;
+  tier: Tier;
+  aliases: string[];
+  obligation: string;
+}) {
+  const [row] = await db
+    .insert(sponsors)
+    .values({
+      name: values.name,
+      tier: values.tier,
+      aliases: values.aliases,
+      obligation: values.obligation,
+    })
+    .returning({ id: sponsors.id });
+
+  if (!row) {
+    throw new Error("The sponsor was not saved.");
   }
 
   return row.id;

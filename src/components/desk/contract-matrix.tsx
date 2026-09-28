@@ -1,20 +1,23 @@
 import type { DeskSponsor } from "~/lib/desk";
 import { tierRoutes, type Tier } from "~/lib/triage/matrix";
 
+import { AddSponsorForm } from "./add-sponsor-form";
 import { TierMark } from "./tier-mark";
 
 export function ContractMatrix({ sponsors }: { sponsors: DeskSponsor[] }) {
   return (
     <aside className="flex flex-col gap-4 lg:sticky lg:top-6 lg:self-start">
-      <div>
+      <div className="flex flex-col gap-1">
         <h2 className="font-heading text-lg font-semibold tracking-tight">
           Contract matrix
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Sponsor name and tier come from this list. The model uses them so it
           does not guess who is title sponsor.
         </p>
       </div>
+
+      <AddSponsorForm />
 
       {sponsors.length === 0 ? (
         <p className="rounded-3xl border border-dashed border-border px-4 py-6 text-sm text-muted-foreground">

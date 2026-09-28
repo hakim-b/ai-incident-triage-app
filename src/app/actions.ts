@@ -3,10 +3,16 @@
 import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
-import { insertIncident, listSponsors, updateIncidentStatus } from "~/lib/desk";
+import {
+  insertIncident,
+  insertSponsor,
+  listSponsors,
+  updateIncidentStatus,
+} from "~/lib/desk";
 import { classifyMessage } from "~/lib/triage/classify";
 import {
   incidentStatuses,
+  isTier,
   matchSponsor,
   sources,
   tierRoutes,
@@ -135,4 +141,77 @@ export async function setIncidentStatus(formData: FormData) {
   const status: IncidentStatus = parsed.data.status;
   await updateIncidentStatus(parsed.data.id, status);
   revalidatePath("/");
+}
+
+const sponsorInput = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Sponsor name must be at least 2 characters.")
+    .max(100, "Sponsor name must be under 100 characters."),
+  tier: z.coerce.number().refine(isTier, {
+    message: "Tier must be 1, 2, or 3.",
+  }),
+  aliases: z.string().optional(),
+  obligation: z
+    .string()
+    .trim()
+    .min(5, "Obligation description must be at least 5 characters.")
+    .max(1000, "Obligation description must be under 1,000 characters."),
+});
+
+export type CreateSponsorState = {
+  error: string | null;
+  success: boolean;
+};
+
+export async function createSponsor(
+  _previous: CreateSponsorState,
+  formData: FormData,
+): Promise<CreateSponsorState> {
+  const parsed = sponsorInput.safeParse({
+    name: formData.get("name"),
+    tier: formData.get("tier"),
+    aliases: formData.get("aliases"),
+    obligation: formData.get("obligation"),
+  });
+
+  if (!parsed.success) {
+    return {
+      error:
+        parsed.error.issues[0]?.message ?? "Please check the sponsor details.",
+      success: false,
+    };
+  }
+
+  const aliases = (parsed.data.aliases ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+
+  try {
+    await insertSponsor({
+      name: parsed.data.name,
+      tier: parsed.data.tier,
+      aliases,
+      obligation: parsed.data.obligation,
+    });
+
+    revalidatePath("/");
+    return { error: null, success: true };
+  } catch (error: unknown) {
+    const err = error as { code?: string; message?: string };
+    if (err?.code === "23505" || err?.message?.includes("unique")) {
+      return {
+        error: `A sponsor named "${parsed.data.name}" already exists in the matrix.`,
+        success: false,
+      };
+    }
+    console.error("createSponsor failed", error);
+    return {
+      error:
+        "Could not add sponsor. Please check your connection and try again.",
+      success: false,
+    };
+  }
 }
