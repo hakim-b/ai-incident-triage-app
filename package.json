@@ -14,18 +14,20 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@ai-sdk/google": "^4.0.82",
+    "@ai-sdk/google": "^4.0.83",
     "@base-ui/react": "^1.8.0",
     "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/react": "^1.1.10",
+    "@shadcn/helpers": "^0.2.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
     "@t3-oss/env-nextjs": "^0.13.11",
-    "ai": "^7.0.118",
+    "ai": "^7.0.119",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "dotenv": "^18.0.4",
-    "drizzle-orm": "^1.0.0-rc.4",
+    "drizzle-orm": "^1.0.0-rc.5-ab785fc",
+    "lucide-react": "^1.48.0",
     "next": "16.3.4",
     "next-themes": "^0.4.6",
     "postgres": "^3.4.9",
@@ -37,17 +39,17 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "drizzle-kit": "^1.0.0-rc.4",
-    "eslint": "^10",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^1.0.0-rc.5-ab785fc",
+    "eslint": "^10.11.0",
     "eslint-config-next": "16.3.4",
     "prettier": "3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

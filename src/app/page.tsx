@@ -1,11 +1,19 @@
 import { ContractMatrix } from "~/components/desk/contract-matrix";
 import { IntakeForm } from "~/components/desk/intake-form";
 import { Queue } from "~/components/desk/queue";
+import { ModeToggle } from "~/components/mode-toggle";
+import { UserAvatarDropdown } from "~/components/user-avatar-dropdown";
 import { loadDesk } from "~/lib/desk";
+import { createClient } from "~/lib/supabase/server";
 
 export const maxDuration = 60;
 
 export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { sponsors, incidents } = await loadDesk();
   const openCount = incidents.filter(
     (incident) => incident.status !== "resolved",
@@ -23,12 +31,18 @@ export default async function Home() {
               Delivery Desk
             </h1>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {openCount} open
-            <span aria-hidden="true"> · </span>
-            <span className="sr-only">, </span>
-            {incidents.length} filed
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
+            <p className="text-sm text-muted-foreground">
+              {openCount} open
+              <span aria-hidden="true"> · </span>
+              <span className="sr-only">, </span>
+              {incidents.length} filed
+            </p>
+            <div className="flex items-center gap-2">
+              <ModeToggle />
+              {user && <UserAvatarDropdown user={user} />}
+            </div>
+          </div>
         </div>
       </header>
 
