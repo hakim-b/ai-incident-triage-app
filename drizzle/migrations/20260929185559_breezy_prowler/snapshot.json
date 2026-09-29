@@ -1,0 +1,542 @@
+{
+  "version": "8",
+  "dialect": "postgres",
+  "id": "eae70df8-c199-47ce-8f0a-44dc21d5cf1a",
+  "prevIds": [
+    "d8c23c2c-9cf5-4269-8788-31a67bfbf8d0"
+  ],
+  "ddl": [
+    {
+      "isRlsEnabled": true,
+      "name": "incidents",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": true,
+      "name": "sponsors",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "type": "bigint",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": {
+        "type": "always",
+        "name": "incidents_id_seq",
+        "increment": "1",
+        "startWith": "1",
+        "minValue": "1",
+        "maxValue": "9223372036854775807",
+        "cache": 1,
+        "cycle": false
+      },
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "source",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "raw_message",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "bigint",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "sponsor_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "sponsor_name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "sponsor_link",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "smallint",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "contract_tier",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "smallint",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "tier",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "priority",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "summary",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "issue",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "action",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "route_to",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "deadline",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'open'",
+      "generated": null,
+      "identity": null,
+      "name": "status",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "type": "bigint",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": {
+        "type": "always",
+        "name": "sponsors_id_seq",
+        "increment": "1",
+        "startWith": "1",
+        "minValue": "1",
+        "maxValue": "9223372036854775807",
+        "cache": 1,
+        "cycle": false
+      },
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "smallint",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "tier",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 1,
+      "default": "ARRAY[]",
+      "generated": null,
+      "identity": null,
+      "name": "aliases",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "obligation",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "type": "timestamp with time zone",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "incidents_user_id_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "sponsor_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "incidents_sponsor_id_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "created_at",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "incidents_created_at_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "sponsors_user_id_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "sponsor_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "sponsors",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "name": "incidents_sponsor_id_sponsors_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "incidents_pkey",
+      "schema": "public",
+      "table": "incidents",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "sponsors_pkey",
+      "schema": "public",
+      "table": "sponsors",
+      "entityType": "pks"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "user_id",
+        "name"
+      ],
+      "nullsNotDistinct": false,
+      "name": "sponsors_user_id_name_key",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "sponsors"
+    },
+    {
+      "value": "\"tier\" between 1 and 3",
+      "name": "incidents_tier_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"contract_tier\" is null or \"contract_tier\" between 1 and 3",
+      "name": "incidents_contract_tier_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "char_length(\"raw_message\") between 1 and 4000",
+      "name": "incidents_message_length_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"source\" in ('whatsapp', 'email', 'phone')",
+      "name": "incidents_source_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"sponsor_link\" in ('named', 'inferred', 'unknown')",
+      "name": "incidents_sponsor_link_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"priority\" in ('critical', 'urgent', 'routine')",
+      "name": "incidents_priority_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"status\" in ('open', 'acknowledged', 'resolved')",
+      "name": "incidents_status_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "incidents"
+    },
+    {
+      "value": "\"tier\" between 1 and 3",
+      "name": "sponsors_tier_check",
+      "entityType": "checks",
+      "schema": "public",
+      "table": "sponsors"
+    }
+  ],
+  "renames": []
+}

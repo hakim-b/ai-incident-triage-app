@@ -8,12 +8,14 @@ import {
   text,
   timestamp,
   unique,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const sponsors = pgTable.withRLS(
   "sponsors",
   {
     id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+    userId: uuid("user_id").notNull(),
     name: text().notNull(),
     tier: smallint().notNull(),
     aliases: text()
@@ -26,7 +28,8 @@ export const sponsors = pgTable.withRLS(
       .defaultNow(),
   },
   (table) => [
-    unique("sponsors_name_key").on(table.name),
+    unique("sponsors_user_id_name_key").on(table.userId, table.name),
+    index("sponsors_user_id_idx").on(table.userId),
     check("sponsors_tier_check", sql`${table.tier} between 1 and 3`),
   ],
 );
@@ -35,6 +38,7 @@ export const incidents = pgTable.withRLS(
   "incidents",
   {
     id: bigint({ mode: "number" }).primaryKey().generatedAlwaysAsIdentity(),
+    userId: uuid("user_id").notNull(),
     source: text({ enum: ["whatsapp", "email", "phone"] }).notNull(),
     rawMessage: text("raw_message").notNull(),
     sponsorId: bigint("sponsor_id", { mode: "number" }).references(
@@ -61,6 +65,7 @@ export const incidents = pgTable.withRLS(
       .defaultNow(),
   },
   (table) => [
+    index("incidents_user_id_idx").on(table.userId),
     index("incidents_sponsor_id_idx").on(table.sponsorId),
     index("incidents_created_at_idx").on(table.createdAt),
     check("incidents_tier_check", sql`${table.tier} between 1 and 3`),

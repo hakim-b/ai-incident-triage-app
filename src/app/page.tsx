@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { ContractMatrix } from "~/components/desk/contract-matrix";
 import { IntakeForm } from "~/components/desk/intake-form";
 import { Queue } from "~/components/desk/queue";
@@ -14,7 +16,11 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { sponsors, incidents } = await loadDesk();
+  if (!user) {
+    redirect("/auth/login");
+  }
+
+  const { sponsors, incidents } = await loadDesk(user.id);
   const openCount = incidents.filter(
     (incident) => incident.status !== "resolved",
   ).length;
@@ -40,7 +46,7 @@ export default async function Home() {
             </p>
             <div className="flex items-center gap-2">
               <ModeToggle />
-              {user && <UserAvatarDropdown user={user} />}
+              <UserAvatarDropdown user={user} />
             </div>
           </div>
         </div>

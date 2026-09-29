@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { connection } from "next/server";
 
 import { db } from "~/db";
@@ -55,28 +55,30 @@ function asPriority(value: string): "critical" | "urgent" | "routine" {
   return "routine";
 }
 
-export async function ensureSponsors() {
+export async function ensureSponsors(userId: string) {
   for (const sponsor of sponsorSeed) {
     await db
       .insert(sponsors)
       .values({
+        userId,
         name: sponsor.name,
         tier: sponsor.tier,
         aliases: [...sponsor.aliases],
         obligation: sponsor.obligation,
       })
       .onConflictDoNothing({
-        target: sponsors.name,
+        target: [sponsors.userId, sponsors.name],
       });
   }
 }
 
-export async function listSponsors() {
-  await ensureSponsors();
+export async function listSponsors(userId: string) {
+  await ensureSponsors(userId);
 
   const sponsorRows = await db
     .select()
     .from(sponsors)
+    .where(eq(sponsors.userId, userId))
     .orderBy(sponsors.tier, sponsors.name);
 
   const deskSponsors: DeskSponsor[] = [];
@@ -94,13 +96,14 @@ export async function listSponsors() {
   return deskSponsors;
 }
 
-export async function loadDesk() {
+export async function loadDesk(userId: string) {
   await connection();
-  const deskSponsors = await listSponsors();
+  const deskSponsors = await listSponsors(userId);
 
   const incidentRows = await db
     .select()
     .from(incidents)
+    .where(eq(incidents.userId, userId))
     .orderBy(desc(incidents.createdAt))
     .limit(40);
 
@@ -138,24 +141,28 @@ export async function loadDesk() {
   return { sponsors: deskSponsors, incidents: deskIncidents };
 }
 
-export async function insertIncident(values: {
-  source: Source;
-  rawMessage: string;
-  sponsorId: number | null;
-  sponsorName: string;
-  sponsorLink: SponsorLink;
-  contractTier: Tier | null;
-  tier: Tier;
-  priority: DeskIncident["priority"];
-  summary: string;
-  issue: string;
-  action: string;
-  routeTo: string;
-  deadline: string;
-}) {
+export async function insertIncident(
+  userId: string,
+  values: {
+    source: Source;
+    rawMessage: string;
+    sponsorId: number | null;
+    sponsorName: string;
+    sponsorLink: SponsorLink;
+    contractTier: Tier | null;
+    tier: Tier;
+    priority: DeskIncident["priority"];
+    summary: string;
+    issue: string;
+    action: string;
+    routeTo: string;
+    deadline: string;
+  },
+) {
   const [row] = await db
     .insert(incidents)
     .values({
+      userId,
       source: values.source,
       rawMessage: values.rawMessage,
       sponsorId: values.sponsorId,
@@ -178,15 +185,20 @@ export async function insertIncident(values: {
 
   return row.id;
 }
-export async function insertSponsor(values: {
-  name: string;
-  tier: Tier;
-  aliases: string[];
-  obligation: string;
-}) {
+
+export async function insertSponsor(
+  userId: string,
+  values: {
+    name: string;
+    tier: Tier;
+    aliases: string[];
+    obligation: string;
+  },
+) {
   const [row] = await db
     .insert(sponsors)
     .values({
+      userId,
       name: values.name,
       tier: values.tier,
       aliases: values.aliases,
@@ -201,6 +213,13 @@ export async function insertSponsor(values: {
   return row.id;
 }
 
-export async function updateIncidentStatus(id: number, status: IncidentStatus) {
-  await db.update(incidents).set({ status }).where(eq(incidents.id, id));
+export async function updateIncidentStatus(
+  userId: string,
+  id: number,
+  status: IncidentStatus,
+) {
+  await db
+    .update(incidents)
+    .set({ status })
+    .where(and(eq(incidents.id, id), eq(incidents.userId, userId)));
 }

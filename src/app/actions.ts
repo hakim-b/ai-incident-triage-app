@@ -9,6 +9,7 @@ import {
   listSponsors,
   updateIncidentStatus,
 } from "~/lib/desk";
+import { createClient } from "~/lib/supabase/server";
 import { classifyMessage } from "~/lib/triage/classify";
 import {
   incidentStatuses,
@@ -55,6 +56,18 @@ export async function triageMessage(
   _previous: TriageState,
   formData: FormData,
 ): Promise<TriageState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      error: "You must be signed in to classify messages.",
+      result: null,
+    };
+  }
+
   const parsed = triageInput.safeParse({
     source: formData.get("source"),
     message: formData.get("message"),
@@ -72,7 +85,7 @@ export async function triageMessage(
   }
 
   try {
-    const sponsors = await listSponsors();
+    const sponsors = await listSponsors(user.id);
     const named = matchSponsor(parsed.data.message, sponsors) ?? null;
 
     const classification = await classifyMessage({
@@ -82,7 +95,7 @@ export async function triageMessage(
       namedSponsor: named,
     });
 
-    const id = await insertIncident({
+    const id = await insertIncident(user.id, {
       source: parsed.data.source,
       rawMessage: parsed.data.message,
       sponsorId: classification.sponsorId,
@@ -129,6 +142,15 @@ export async function triageMessage(
 }
 
 export async function setIncidentStatus(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return;
+  }
+
   const parsed = statusInput.safeParse({
     id: formData.get("id"),
     status: formData.get("status"),
@@ -139,7 +161,7 @@ export async function setIncidentStatus(formData: FormData) {
   }
 
   const status: IncidentStatus = parsed.data.status;
-  await updateIncidentStatus(parsed.data.id, status);
+  await updateIncidentStatus(user.id, parsed.data.id, status);
   revalidatePath("/");
 }
 
@@ -169,6 +191,18 @@ export async function createSponsor(
   _previous: CreateSponsorState,
   formData: FormData,
 ): Promise<CreateSponsorState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      error: "You must be signed in to add sponsors.",
+      success: false,
+    };
+  }
+
   const parsed = sponsorInput.safeParse({
     name: formData.get("name"),
     tier: formData.get("tier"),
@@ -190,7 +224,7 @@ export async function createSponsor(
     .filter((item) => item.length > 0);
 
   try {
-    await insertSponsor({
+    await insertSponsor(user.id, {
       name: parsed.data.name,
       tier: parsed.data.tier,
       aliases,
@@ -200,8 +234,19 @@ export async function createSponsor(
     revalidatePath("/");
     return { error: null, success: true };
   } catch (error: unknown) {
-    const err = error as { code?: string; message?: string };
-    if (err?.code === "23505" || err?.message?.includes("unique")) {
+    const err = error as {
+      code?: string;
+      message?: string;
+      cause?: { code?: string; message?: string };
+    };
+    const isUniqueViolation =
+      err?.code === "23505" ||
+      err?.cause?.code === "23505" ||
+      err?.message?.includes("unique") ||
+      err?.cause?.message?.includes("unique") ||
+      String(error).includes("unique");
+
+    if (isUniqueViolation) {
       return {
         error: `A sponsor named "${parsed.data.name}" already exists in the matrix.`,
         success: false,
